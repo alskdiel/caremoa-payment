@@ -17,8 +17,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Data
@@ -35,14 +37,13 @@ public class Contract {
 
 	@OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments = new ArrayList<>();
-/*
-	public Contract(Long id, Long memberId, Long helperId, List<Payment> payments) {
+
+	public Contract(Long id, Long memberId, Long helperId) {
 		super();
 		this.id = id;
 		this.memberId = memberId;
 		this.helperId = helperId;
-		this.payments = payments;
-	}*/
+	}
 
 	public ContractDto toDto() {
 		ContractDto contractDto = new ContractDto();

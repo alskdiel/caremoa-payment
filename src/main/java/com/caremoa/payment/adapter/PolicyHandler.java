@@ -6,6 +6,7 @@ import org.springdoc.api.ErrorMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.caremoa.payment.domain.model.Contract;
 import com.caremoa.payment.domain.service.ContractService;
 
 import lombok.RequiredArgsConstructor;
@@ -56,13 +57,11 @@ public class PolicyHandler {
      * @description   : 점수반영
      * @param paymentId
     */
-    private void SaveContract(Long contractId, Long memberId, Long helperId) {
+    private void createContract(Long contractId, Long memberId, Long helperId) {
     	try {
     		log.debug("ReflectionScore {}, {}, {}", contractId, memberId, helperId);
-    		//Contract contract = new Contract(contractId, memberId, helperId);
-    		
-    		//contractService.saveContract(contract);
-    		
+    		Contract contract = new Contract(contractId, memberId, helperId);
+    		contractService.createContract(contract);
 			//log.debug("계약정보 {}", contract);
 		//} catch (ApiException e) {
 		//	// TODO Auto-generated catch block
@@ -74,18 +73,18 @@ public class PolicyHandler {
     }
 
     /**
-     * @methodName    : wheneverContracAcceptedThenSaveContract
+     * @methodName    : wheneverContracAcceptedThenCreateContract
      * @date          : 2023.05.19
      * @description   : 계약이 완료될 때 계약정보 저장
      * @return
     */
     @Bean
-    //Consumer<ContractAccepted>wheneverContractAcceptedThenSaveContract() {
-    Consumer<ContractAccepted>wheneverContractAcceptedThenSaveContract() {
+    //Consumer<ContractAccepted>wheneverContractAcceptedThenCreateContract() {
+    Consumer<ContractAccepted>wheneverContractAcceptedThenCreateContract() {
         	return contractAccepted -> {
     		log.debug("Call contractAccepted : {}", contractAccepted.validate() );
     		if ( contractAccepted.validate() ) {
-    			SaveContract(contractAccepted.getContractId(), contractAccepted.getMemberId(), contractAccepted.getHelperId());
+    			createContract(contractAccepted.getContractId(), contractAccepted.getMemberId(), contractAccepted.getHelperId());
     		}
     	};
     }

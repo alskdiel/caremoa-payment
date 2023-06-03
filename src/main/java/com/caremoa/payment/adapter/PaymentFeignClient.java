@@ -36,8 +36,11 @@ public interface PaymentFeignClient {
     void deleteData(@PathVariable("id") Long id);
     */
     @PostMapping("/external/approve-payment")
-    PaymentDto postData(@RequestBody PaymentDto paymentDto);
+    PaymentDto postExternalData(@RequestBody PaymentDto paymentDto);
 
     @PostMapping("/external/cancel-payment")
-    PaymentDto deleteData(@RequestBody PaymentDto paymentDto);
+    PaymentDto deleteExternalData(@RequestBody PaymentDto paymentDto);
+
+    @PostMapping("/create/")
+    PaymentDto postContractData(@RequestBody PaymentDto paymentDto);
 }

@@ -43,6 +43,7 @@ public class PaymentService {
     public PaymentDto updatePayment(Long id, PaymentDto paymentDto) {
         Payment existingPayment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
+        existingPayment.setContract(paymentDto.getContract().toEntity());
         existingPayment.setPaymentType(paymentDto.getPaymentType());
         existingPayment.setPaymentMethod(paymentDto.getPaymentMethod());
         existingPayment.setPaymentRequestState(paymentDto.getPaymentRequestState());

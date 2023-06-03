@@ -37,7 +37,6 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final PaymentFeignClient paymentFeignClient;
 
-
     @GetMapping("/payments")
     public List<PaymentDto> getAllPayments() {
     	log.debug("getAllPayments()");
@@ -52,20 +51,25 @@ public class PaymentController {
 
     @PostMapping("/payments")
     public PaymentDto createPayment(@RequestBody PaymentDto paymentDto) {
-    	paymentDto.setId(null);
     	log.debug("createPayment()");
+    	paymentDto.setPaymentRequestState(PaymentRequestState.REQUESTED);
+    	paymentDto.setPaymentType(PaymentType.NORMAL);
+    	paymentDto.setRequestDateTime(LocalDateTime.now());
     	
     	/* EXTERNAL 승인 요청 */
     	PaymentDto requestPaymentDto = new PaymentDto();
     	requestPaymentDto.setRequestAmount(paymentDto.getRequestAmount());
     	requestPaymentDto.setPaymentRequestState(paymentDto.getPaymentRequestState());
-    	paymentDto.setRequestDateTime(LocalDateTime.now());
-    	PaymentDto responsePaymentDto = paymentFeignClient.postData(requestPaymentDto);
-    	paymentDto.setPaymentType(PaymentType.NORMAL);
+    	PaymentDto responsePaymentDto = paymentFeignClient.postExternalData(requestPaymentDto);
+    	
     	paymentDto.setPaymentRequestState(responsePaymentDto.getPaymentRequestState());
     	paymentDto.setResponseDateTime(LocalDateTime.now());
     	paymentDto.setApproveNo(responsePaymentDto.getApproveNo());
-        return paymentService.createPayment(paymentDto);
+    	
+    	PaymentDto ret = paymentService.createPayment(paymentDto);
+    	paymentFeignClient.postContractData(ret);
+    	
+        return ret;
     }
 
     @PutMapping("/payments/{id}")
@@ -77,25 +81,21 @@ public class PaymentController {
     @DeleteMapping("/payments/{id}")
     public void deletePayment(@PathVariable("id") Long id) {
     	log.debug("deletePayment()");
-    	
     	PaymentDto paymentDto = paymentService.getPaymentById(id);
     	paymentDto.setId(null);
+    	paymentDto.setPaymentType(PaymentType.CANCEL);
+    	paymentDto.setRequestDateTime(LocalDateTime.now());
     	
     	/* EXTERNA 취소 요청 */
     	PaymentDto requestPaymentDto = new PaymentDto();
     	requestPaymentDto.setRequestAmount(paymentDto.getRequestAmount());
     	requestPaymentDto.setApproveNo(paymentDto.getApproveNo());
     	requestPaymentDto.setPaymentRequestState(PaymentRequestState.REQUESTED);
-    	paymentDto.setRequestDateTime(LocalDateTime.now());
-    	paymentDto.setPaymentType(PaymentType.CANCEL);
-    	PaymentDto responsePaymentDto = paymentFeignClient.deleteData(requestPaymentDto);
+    	PaymentDto responsePaymentDto = paymentFeignClient.deleteExternalData(requestPaymentDto);
     	paymentDto.setPaymentRequestState(responsePaymentDto.getPaymentRequestState());
     	paymentDto.setResponseDateTime(LocalDateTime.now());
         paymentService.createPayment(paymentDto);
         
-    	/*
-        paymentService.deletePayment(id);
-        */
     }
     
     @GetMapping("/members/{id}/payments")

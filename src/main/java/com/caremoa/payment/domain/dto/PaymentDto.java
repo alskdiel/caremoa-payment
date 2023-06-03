@@ -17,7 +17,9 @@ import com.caremoa.payment.domain.model.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Data
@@ -25,6 +27,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Getter
+@Setter
 public class PaymentDto {
 
     private Long id;
@@ -36,61 +40,6 @@ public class PaymentDto {
 	private Integer requestAmount;
 	private LocalDateTime responseDateTime;
 	private String approveNo;
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public ContractDto getContract() {
-		return contract;
-	}
-	public void setContract(ContractDto contract) {
-		this.contract = contract;
-	}
-	public PaymentType getPaymentType() {
-		return paymentType;
-	}
-	public void setPaymentType(PaymentType paymentType) {
-		this.paymentType = paymentType;
-	}
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-	public PaymentRequestState getPaymentRequestState() {
-		return paymentRequestState;
-	}
-	public void setPaymentRequestState(PaymentRequestState paymentRequestState) {
-		this.paymentRequestState = paymentRequestState;
-	}
-	public LocalDateTime getRequestDateTime() {
-		return requestDateTime;
-	}
-	public void setRequestDateTime(LocalDateTime requestDateTime) {
-		this.requestDateTime = requestDateTime;
-	}
-	public Integer getRequestAmount() {
-		return requestAmount;
-	}
-	public void setRequestAmount(Integer requestAmount) {
-		this.requestAmount = requestAmount;
-	}
-	public LocalDateTime getResponseDateTime() {
-		return responseDateTime;
-	}
-	public void setResponseDateTime(LocalDateTime responseDateTime) {
-		this.responseDateTime = responseDateTime;
-	}
-	public String getApproveNo() {
-		return approveNo;
-	}
-	public void setApproveNo(String approveNo) {
-		this.approveNo = approveNo;
-	}
 	
 	public Payment toEntity() {
 		Payment payment = new Payment();

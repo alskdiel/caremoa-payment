@@ -32,7 +32,7 @@ spring:
 #-------------------------------------------------------------
   cloud:
     function:
-      definition: wheneverContractCompletedThenReflectionScore;wheneverClaimCompletedThenReflectionScore;whenevereReviewMemberEvaluatedThenReflectionScore;
+      definition: whenevereReviewMemberEvaluatedThenSaveContract;
       
     stream:
       kafka:
@@ -47,7 +47,7 @@ spring:
 #              resetOffsets: true
 #              start-offset: earliest
       bindings:
-        wheneverContractCompletedThenSaveContract-in-0:
+        wheneverContractAcceptedThenSaveContract-in-0:
           group: contract
           destination: caremoa-topic
           content-type: application/json        

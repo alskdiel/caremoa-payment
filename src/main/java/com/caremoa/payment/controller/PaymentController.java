@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.caremoa.payment.adapter.ContractAccepted;
-import com.caremoa.payment.adapter.PaymentFeignClient;
+import com.caremoa.payment.adapter.ContractFeignClient;
+import com.caremoa.payment.adapter.ExternalFeignClient;
 import com.caremoa.payment.domain.dto.PaymentDto;
 import com.caremoa.payment.domain.model.PaymentRequestState;
 import com.caremoa.payment.domain.model.PaymentType;
@@ -35,7 +36,8 @@ public class PaymentController {
 
     private final StreamBridge streamBridge;
     private final PaymentService paymentService;
-    private final PaymentFeignClient paymentFeignClient;
+    private final ExternalFeignClient externalFeignClient;
+    private final ContractFeignClient contractFeignClient;
 
     @GetMapping("/payments")
     public List<PaymentDto> getAllPayments() {
@@ -60,14 +62,14 @@ public class PaymentController {
     	PaymentDto requestPaymentDto = new PaymentDto();
     	requestPaymentDto.setRequestAmount(paymentDto.getRequestAmount());
     	requestPaymentDto.setPaymentRequestState(paymentDto.getPaymentRequestState());
-    	PaymentDto responsePaymentDto = paymentFeignClient.postExternalData(requestPaymentDto);
+    	PaymentDto responsePaymentDto = externalFeignClient.postExternalData(requestPaymentDto);
     	
     	paymentDto.setPaymentRequestState(responsePaymentDto.getPaymentRequestState());
     	paymentDto.setResponseDateTime(LocalDateTime.now());
     	paymentDto.setApproveNo(responsePaymentDto.getApproveNo());
     	
     	PaymentDto ret = paymentService.createPayment(paymentDto);
-    	paymentFeignClient.postContractData(ret);
+    	contractFeignClient.postContractData(ret);
     	
         return ret;
     }
@@ -91,7 +93,7 @@ public class PaymentController {
     	requestPaymentDto.setRequestAmount(paymentDto.getRequestAmount());
     	requestPaymentDto.setApproveNo(paymentDto.getApproveNo());
     	requestPaymentDto.setPaymentRequestState(PaymentRequestState.REQUESTED);
-    	PaymentDto responsePaymentDto = paymentFeignClient.deleteExternalData(requestPaymentDto);
+    	PaymentDto responsePaymentDto = externalFeignClient.deleteExternalData(requestPaymentDto);
     	paymentDto.setPaymentRequestState(responsePaymentDto.getPaymentRequestState());
     	paymentDto.setResponseDateTime(LocalDateTime.now());
         paymentService.createPayment(paymentDto);

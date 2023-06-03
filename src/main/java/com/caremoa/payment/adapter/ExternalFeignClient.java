@@ -14,33 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.caremoa.payment.domain.dto.PaymentDto;
 
-@FeignClient(name = "payment", url = "http://localhost:8099/") // Feign Client 설정
-public interface PaymentFeignClient {
-	/*
-	@GetMapping("/payments")
-    Page<PaymentDto> getAll(Pageable pageable);
-    
-    @GetMapping("/payments/{id}")
-    PaymentDto getById(@PathVariable("id") Long id);
+@FeignClient(name = "external", url = "http://localhost:8099/") // Feign Client 설정
+public interface ExternalFeignClient {
 
-    @PostMapping("/payments")
-    PaymentDto postData(@RequestBody PaymentDto paymentDto);
-
-    @PutMapping("/payments/{id}")
-    PaymentDto putData(@RequestBody PaymentDto paymentDto, @PathVariable("id") Long id);
-
-	@PatchMapping("/payments/{id}")
-	PaymentDto patchData(@RequestBody PaymentDto paymentDto, @PathVariable("id") Long id);
-
-    @DeleteMapping("/payments/{id}")
-    void deleteData(@PathVariable("id") Long id);
-    */
     @PostMapping("/external/approve-payment")
     PaymentDto postExternalData(@RequestBody PaymentDto paymentDto);
 
     @PostMapping("/external/cancel-payment")
     PaymentDto deleteExternalData(@RequestBody PaymentDto paymentDto);
-
-    @PostMapping("/create/")
-    PaymentDto postContractData(@RequestBody PaymentDto paymentDto);
 }

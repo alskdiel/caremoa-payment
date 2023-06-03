@@ -12,27 +12,13 @@ import com.caremoa.payment.domain.service.ContractService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/**
-* @packageName    : com.caremoa.payment.adapter
-* @fileName       : PolicyHandler.java
-* @author         : 이병관
-* @date           : 2023.05.14
-* @description    : Cloud Stream 을 이용한 Pub/Sub 구현
-* ===========================================================
-* DATE              AUTHOR             NOTE
-* -----------------------------------------------------------
-* 2023.05.14        이병관       최초 생성
-*/
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class PolicyHandler {
 
 	private long errorOccur = 0;
-	private final ContractService contractService; 
-	private final static int CONTRACT_SCORE = 1;
-	private final static int CLAIM_SCORE = -1;
-	private final static int REVIEW_SCORE = 2;
+	private final ContractService contractService;
 
     @Bean
     Consumer<ContractAccepted> basicConsumer() {
@@ -62,10 +48,6 @@ public class PolicyHandler {
     		log.debug("ReflectionScore {}, {}, {}", contractId, memberId, helperId);
     		Contract contract = new Contract(contractId, memberId, helperId);
     		contractService.createContract(contract);
-			//log.debug("계약정보 {}", contract);
-		//} catch (ApiException e) {
-		//	// TODO Auto-generated catch block
-		//	log.debug("{} : {}", e.getCode(), e.getMessage() );;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,7 +61,6 @@ public class PolicyHandler {
      * @return
     */
     @Bean
-    //Consumer<ContractAccepted>wheneverContractAcceptedThenCreateContract() {
     Consumer<ContractAccepted>wheneverContractAcceptedThenCreateContract() {
         	return contractAccepted -> {
     		log.debug("Call contractAccepted : {}", contractAccepted.validate() );

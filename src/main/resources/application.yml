@@ -10,8 +10,8 @@ spring:
       mode: embedded # ALWAYS: 모든 데이터베이스에 sql 스크립트를 동작시킨다. / EMBDEDED: embedded 데이터베이스만 sql 스크립트를 동작시킨다. / NEVER: 모든 데이터베이스에 sql 스크립트를 동작시키지 않는다.
       schema-locations: classpath*:db/${database}/schema.sql
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
+    url: jdbc:h2:mem:payment
+    username: sa8084
     password:
     driver-class-name: org.h2.Driver
   jpa:
@@ -32,7 +32,8 @@ spring:
 #-------------------------------------------------------------
   cloud:
     function:
-      definition: whenevereReviewMemberEvaluatedThenSaveContract;
+      #definition: whenevereReviewMemberEvaluatedThenSaveContract;
+      definition: basicConsumer
       
     stream:
       kafka:
@@ -41,17 +42,12 @@ spring:
         #  zkNodes: localhost:2181,localhost:2182,localhost:2183
         binder:
           brokers: localhost:9092
-#        bindings:
-#          basicConsumer-in-0:
-#            consumer:
-#              resetOffsets: true
-#              start-offset: earliest
+
       bindings:
-        wheneverContractAcceptedThenSaveContract-in-0:
+        basicConsumer-in-0:
           group: contract
           destination: caremoa-topic
-          content-type: application/json        
-        
+          content-type: application/json    
         basicProducer-out-0:
           destination: caremoa-topic
           content-type: application/json

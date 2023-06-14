@@ -59,7 +59,7 @@ public class PaymentService {
         paymentRepository.deleteById(id);
     }
 
-    public List<PaymentDto> getMemberPayments(Long id) {
+    public List<PaymentDto> getPaymentsByMemberId(Long id) {
         List<Payment> payments = new ArrayList<Payment>();
         List<Contract> contract = contractRepository.findByMemberId(id);
         for(Contract c : contract) {

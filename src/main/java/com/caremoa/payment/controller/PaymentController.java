@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.caremoa.payment.adapter.ContractAccepted;
-import com.caremoa.payment.adapter.ContractFeignClient;
 import com.caremoa.payment.adapter.ExternalFeignClient;
+import com.caremoa.payment.adapter.PaymentCompleted;
 import com.caremoa.payment.domain.dto.PaymentDto;
 import com.caremoa.payment.domain.model.PaymentRequestState;
 import com.caremoa.payment.domain.model.PaymentType;
@@ -37,7 +37,7 @@ public class PaymentController {
     private final StreamBridge streamBridge;
     private final PaymentService paymentService;
     private final ExternalFeignClient externalFeignClient;
-    private final ContractFeignClient contractFeignClient;
+    //private final ContractFeignClient contractFeignClient;
 
     @GetMapping("/payments")
     public List<PaymentDto> getAllPayments() {
@@ -69,7 +69,8 @@ public class PaymentController {
     	paymentDto.setApproveNo(responsePaymentDto.getApproveNo());
     	
     	PaymentDto ret = paymentService.createPayment(paymentDto);
-    	contractFeignClient.postContractData(ret);
+    	//contractFeignClient.postContractData(paymentDto);
+    	this.publishPaymentCompleted(paymentDto);
     	
         return ret;
     }
@@ -98,17 +99,20 @@ public class PaymentController {
     	paymentDto.setResponseDateTime(LocalDateTime.now());
         paymentService.createPayment(paymentDto);
         
+        this.publishPaymentCompleted(paymentDto);
+    	
     }
     
     @GetMapping("/members/{id}/payments")
     public List<PaymentDto> getMemberPayments(@PathVariable("id") Long id) {
     	log.debug("getUserPayments()");
-        return paymentService.getMemberPayments(id);
+        return paymentService.getPaymentsByMemberId(id);
     }
 
 	@Operation(summary = "카프카 Publish 테스트" , description = "카프카 Publish 테스트" )
 	@GetMapping("/testkafka/{contractId}/{memberId}/{helperId}")
-	public ResponseEntity<HttpStatus> test(@PathVariable("memberId") Long contractId, @PathVariable("memberId") Long memberId, @PathVariable("helperId") Long helperId) {
+	public ResponseEntity<HttpStatus> test(@PathVariable("contractId") Long contractId, @PathVariable("memberId") Long memberId, @PathVariable("helperId") Long helperId) {
+		log.debug("@@@@@@@@@@@@@@ kafka test @@@@@@@@@@@@@@");
 		try {
 			ContractAccepted xx = ContractAccepted.builder().contractId(contractId).helperId(helperId).memberId(memberId).build();
 			String json = xx.toJson();
@@ -124,4 +128,26 @@ public class PaymentController {
 			return ResponseEntity.internalServerError().body(null);
 		}
 	}
+
+	
+	private void publishPaymentCompleted(PaymentDto paymentDto) {
+		try {
+			PaymentCompleted paymentCompleted = PaymentCompleted.builder().id(paymentDto.getId())
+					.contract(paymentDto.getContract()).paymentType(paymentDto.getPaymentType())
+					.paymentMethod(paymentDto.getPaymentMethod()).paymentRequestState(paymentDto.getPaymentRequestState())
+					.requestDateTime(paymentDto.getRequestDateTime()).requestAmount(paymentDto.getRequestAmount())
+					.responseDateTime(paymentDto.getRequestDateTime()).approveNo(paymentDto.getApproveNo()).build();
+			
+			String json = paymentCompleted.toJson();
+			log.info("before publish");
+		    if( json != null ){
+		          streamBridge.send("basicProducer-out-0", MessageBuilder.withPayload(json)
+		      	 		.setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON).build());
+		     }
+		    log.info("after publish");
+		} catch (Exception e) {
+			log.info("publish {}", e.getMessage());
+		}
+	}
+	
 }

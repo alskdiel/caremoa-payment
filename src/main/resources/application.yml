@@ -8,10 +8,10 @@ spring:
   sql:
     init:
       mode: embedded # ALWAYS: 모든 데이터베이스에 sql 스크립트를 동작시킨다. / EMBDEDED: embedded 데이터베이스만 sql 스크립트를 동작시킨다. / NEVER: 모든 데이터베이스에 sql 스크립트를 동작시키지 않는다.
-      schema-locations: classpath*:db/${database}/schema.sql
+      #schema-locations: classpath*:db/${database}/schema.sql
   datasource:
-    url: jdbc:h2:mem:payment
-    username: sa8084
+    url: jdbc:h2:mem:testdb
+    username: sa
     password:
     driver-class-name: org.h2.Driver
   jpa:

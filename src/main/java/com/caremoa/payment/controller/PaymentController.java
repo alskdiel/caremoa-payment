@@ -55,10 +55,12 @@ public class PaymentController {
     //public Payment8084Dto createPayment(@RequestBody Payment8084Dto payment8084Dto) {
     public PaymentReqDto createPayment(@RequestBody PaymentReqDto paymentReqDto) {
     	log.debug("createPayment()");
-    	Contract8084Dto contractDto = paymentReqDto.getContract();
+    	Contract8084Dto contractDto = paymentReqDto.igetContract();
 		contractService.createContract(contractDto);
-    	
-    	Payment8084Dto paymentDto = paymentReqDto.getPayment();
+    	log.debug("contractDto: "+contractDto.toString());
+    	Payment8084Dto paymentDto = paymentReqDto.igetPayment();
+
+    	log.debug("paymentDto: "+paymentDto.toString());
     	paymentDto.setContract(contractDto);
     	paymentDto.setPaymentRequestState(PaymentRequestState.REQUESTED);
     	paymentDto.setPaymentType(PaymentType.NORMAL);
@@ -73,12 +75,17 @@ public class PaymentController {
     	paymentDto.setPaymentRequestState(responsePaymentDto.getPaymentRequestState());
     	paymentDto.setResponseDateTime(LocalDateTime.now());
     	paymentDto.setApproveNo(responsePaymentDto.getApproveNo());
-    	paymentService.createPayment(paymentDto);
+    	Payment8084Dto savedPaymentDto = paymentService.createPayment(paymentDto);
     	
-    	this.publishPaymentCompleted(paymentDto);
-    	
-    	paymentReqDto.setPayment(paymentDto);
-        return paymentReqDto;
+    	log.debug("c2222222222222222222222222222222222");
+    	this.publishPaymentCompleted(savedPaymentDto);
+
+    	log.debug("44444444444444444444444444444444444");
+    	PaymentReqDto ret = new PaymentReqDto(contractDto, savedPaymentDto);
+
+    	log.debug("ret: "+ret.toString());
+    	log.debug("555555555555555555555555555555555555");
+        return ret;
     }
 
     @PutMapping("/payments/{id}")
@@ -120,18 +127,16 @@ public class PaymentController {
 			PaymentCompleted paymentCompleted = PaymentCompleted.builder().id(paymentDto.getId())
 					.contract(paymentDto.getContract()).paymentType(paymentDto.getPaymentType())
 					.paymentMethod(paymentDto.getPaymentMethod()).paymentRequestState(paymentDto.getPaymentRequestState())
-					.requestDateTime(paymentDto.getRequestDateTime()).requestAmount(paymentDto.getRequestAmount())
-					.responseDateTime(paymentDto.getRequestDateTime()).approveNo(paymentDto.getApproveNo()).build();
-			
+					.requestAmount(paymentDto.getRequestAmount())
+					.approveNo(paymentDto.getApproveNo()).build();
 			String json = paymentCompleted.toJson();
-			log.info("before publish");
 		    if( json != null ){
 		          streamBridge.send("basicProducer-out-0", MessageBuilder.withPayload(json)
 		      	 		.setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON).build());
 		     }
-		    log.info("after publish");
 		} catch (Exception e) {
 			log.info("publish {}", e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

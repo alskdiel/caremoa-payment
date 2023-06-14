@@ -7,6 +7,7 @@ import com.caremoa.payment.domain.model.PaymentRequestState;
 import com.caremoa.payment.domain.model.PaymentType;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -21,33 +23,45 @@ import lombok.ToString;
 @Setter
 public class PaymentReqDto {
 
-	protected Long id;
+	private Long id;
 	private Long contractId;
 	private Long memberId;
 	private Long helperId;
 	private String helperName;
-	protected PaymentType paymentType;
-	protected PaymentMethod paymentMethod;
-	protected PaymentRequestState paymentRequestState;
-	protected LocalDateTime requestDateTime;
-	protected Integer requestAmount;
-	protected LocalDateTime responseDateTime;
-	protected String approveNo;
+	private PaymentType paymentType;
+	private PaymentMethod paymentMethod;
+	private PaymentRequestState paymentRequestState;
+	private LocalDateTime requestDateTime;
+	private Integer requestAmount;
+	private LocalDateTime responseDateTime;
+	private String approveNo;
 
-	public Contract8084Dto getContract() {
+	public PaymentReqDto(Contract8084Dto contractDto, Payment8084Dto paymentDto) {
+		this.isetContract(contractDto);
+		this.isetPayment(paymentDto);
+	}
+	
+	public Contract8084Dto igetContract() {
 		return new Contract8084Dto(this.contractId, this.memberId, this.helperId, this.helperName);
 	}
 
-	public Payment8084Dto getPayment() {
+	public Payment8084Dto igetPayment() {
 		if(this.paymentMethod == null) {
 			this.paymentMethod = PaymentMethod.KAKAO;
 		}
-		return Payment8084Dto.builder().contract(this.getContract())
+		return Payment8084Dto.builder().contract(this.igetContract())
 				                       .paymentMethod(this.paymentMethod)
 				                       .requestAmount(this.requestAmount).build();
 	}
+	
+	public void isetContract(Contract8084Dto contractDto) {
+		this.contractId = contractDto.getId();
+		this.memberId = contractDto.getMemberId();
+		this.helperId = contractDto.getHelperId();
+		this.helperName = contractDto.getHelperName();
+	}
 
-	public void setPayment(Payment8084Dto paymentDto) {
+	public void isetPayment(Payment8084Dto paymentDto) {
 		this.id = paymentDto.getId();
     	this.paymentType = paymentDto.getPaymentType();
     	this.paymentMethod = paymentDto.getPaymentMethod();

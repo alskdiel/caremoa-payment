@@ -1,3 +1,4 @@
+/*
 create table contract (
 	id bigint not null,
 	helper_id bigint,
@@ -33,3 +34,4 @@ Insert into contract (id, member_id, helper_id) values (2, 2, 11);
 Insert into contract (id, member_id, helper_id) values (3, 1, 22);
 Insert into contract (id, member_id, helper_id) values (4, 1, 33);
 Insert into contract (id, member_id, helper_id) values (5, 2, 33);
+*/

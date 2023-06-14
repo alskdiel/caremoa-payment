@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Data
-public class PaymentReject {
+public class PaymentReject8084 {
     @Id
     @GeneratedValue
     private Long id;
@@ -24,5 +24,5 @@ public class PaymentReject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
-    private Payment payment;
+    private Payment8084 payment;
 }

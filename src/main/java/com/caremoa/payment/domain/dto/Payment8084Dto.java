@@ -8,8 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.caremoa.payment.domain.model.Contract;
-import com.caremoa.payment.domain.model.Payment;
+import com.caremoa.payment.domain.model.Contract8084;
+import com.caremoa.payment.domain.model.Payment8084;
 import com.caremoa.payment.domain.model.PaymentMethod;
 import com.caremoa.payment.domain.model.PaymentRequestState;
 import com.caremoa.payment.domain.model.PaymentType;
@@ -29,20 +29,20 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class PaymentDto {
+public class Payment8084Dto {
 
     private Long id;
-    private ContractDto contract;
+    private Contract8084Dto contract;
     private PaymentType paymentType;
     private PaymentMethod paymentMethod;
     private PaymentRequestState paymentRequestState; 
-	private LocalDateTime requestDateTime;
-	private Integer requestAmount;
-	private LocalDateTime responseDateTime;
-	private String approveNo;
+    private LocalDateTime requestDateTime;
+    private Integer requestAmount;
+    private LocalDateTime responseDateTime;
+    private String approveNo;
 	
-	public Payment toEntity() {
-		Payment payment = new Payment();
+	public Payment8084 toEntity() {
+		Payment8084 payment = new Payment8084();
 		payment.setId(this.id);
 		payment.setContract(this.contract.toEntity());
 		payment.setPaymentType(this.paymentType);

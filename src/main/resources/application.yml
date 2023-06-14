@@ -44,10 +44,10 @@ spring:
           brokers: localhost:9092
 
       bindings:
-        basicConsumer-in-0:
-          group: contract
-          destination: caremoa-topic
-          content-type: application/json    
+        #basicConsumer-in-0:
+        #  group: contract
+        #  destination: caremoa-topic
+        #  content-type: application/json    
         basicProducer-out-0:
           destination: caremoa-topic
           content-type: application/json

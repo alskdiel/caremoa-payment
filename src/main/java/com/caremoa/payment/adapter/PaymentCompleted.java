@@ -2,7 +2,7 @@ package com.caremoa.payment.adapter;
 
 import java.time.LocalDateTime;
 
-import com.caremoa.payment.domain.dto.ContractDto;
+import com.caremoa.payment.domain.dto.Contract8084Dto;
 import com.caremoa.payment.domain.model.PaymentMethod;
 import com.caremoa.payment.domain.model.PaymentRequestState;
 import com.caremoa.payment.domain.model.PaymentType;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentCompleted extends AbstractEvent{
     private Long id;
-    private ContractDto contract;
+    private Contract8084Dto contract;
     private PaymentType paymentType;
     private PaymentMethod paymentMethod;
     private PaymentRequestState paymentRequestState; 
@@ -27,7 +27,7 @@ public class PaymentCompleted extends AbstractEvent{
 	private String approveNo;
 	
 	@Builder
-	public PaymentCompleted(Long id, ContractDto contract, PaymentType paymentType, PaymentMethod paymentMethod, PaymentRequestState paymentRequestState,
+	public PaymentCompleted(Long id, Contract8084Dto contract, PaymentType paymentType, PaymentMethod paymentMethod, PaymentRequestState paymentRequestState,
 			LocalDateTime requestDateTime, Integer requestAmount, LocalDateTime responseDateTime, String approveNo) {
 		super();
 		this.id = id;

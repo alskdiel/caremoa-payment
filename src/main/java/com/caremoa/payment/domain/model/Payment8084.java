@@ -16,7 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.caremoa.payment.domain.dto.PaymentDto;
+import com.caremoa.payment.domain.dto.Payment8084Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,14 +32,14 @@ import lombok.Setter;
 @Data
 @AllArgsConstructor
 @Builder
-public class Payment {
+public class Payment8084 {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
-    private Contract contract;
+    private Contract8084 contract;
 	//private Long contractId;
 	
 	@Enumerated(EnumType.STRING)
@@ -57,10 +57,10 @@ public class Payment {
 	private String approveNo;
 
 	@OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PaymentReject> paymentRejects = new ArrayList<>();
+    private List<PaymentReject8084> paymentRejects = new ArrayList<>();
 
-	public PaymentDto toDto() {
-		PaymentDto paymentDto = new PaymentDto();
+	public Payment8084Dto toDto() {
+		Payment8084Dto paymentDto = new Payment8084Dto();
 		paymentDto.setId(this.id);
 		paymentDto.setContract(this.contract.toDto());
 		paymentDto.setPaymentType(this.paymentType);

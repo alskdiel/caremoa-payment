@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.caremoa.payment.domain.dto.PaymentDto;
+import com.caremoa.payment.domain.dto.Payment8084Dto;
 
 @FeignClient(name = "external", url = "http://localhost:8099/") // Feign Client 설정
 public interface ExternalFeignClient {
 
     @PostMapping("/external/approve-payment")
-    PaymentDto postExternalData(@RequestBody PaymentDto paymentDto);
+    Payment8084Dto postExternalData(@RequestBody Payment8084Dto paymentDto);
 
     @PostMapping("/external/cancel-payment")
-    PaymentDto deleteExternalData(@RequestBody PaymentDto paymentDto);
+    Payment8084Dto deleteExternalData(@RequestBody Payment8084Dto paymentDto);
 }

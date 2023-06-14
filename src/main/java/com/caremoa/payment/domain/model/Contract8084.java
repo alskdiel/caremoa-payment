@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.caremoa.payment.domain.dto.ContractDto;
+import com.caremoa.payment.domain.dto.Contract8084Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,30 +26,32 @@ import lombok.Setter;
 @Data
 @AllArgsConstructor
 @Builder
-public class Contract {
+public class Contract8084 {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private Long memberId;
 	private Long helperId;
-
-
+	private String helperName;
+	
 	@OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Payment> payments = new ArrayList<>();
+    private List<Payment8084> payments = new ArrayList<>();
 
-	public Contract(Long id, Long memberId, Long helperId) {
+	public Contract8084(Long id, Long memberId, Long helperId, String helperName) {
 		super();
 		this.id = id;
 		this.memberId = memberId;
 		this.helperId = helperId;
+		this.helperName = helperName;
 	}
 
-	public ContractDto toDto() {
-		ContractDto contractDto = new ContractDto();
+	public Contract8084Dto toDto() {
+		Contract8084Dto contractDto = new Contract8084Dto();
 		contractDto.setId(this.id);
 		contractDto.setMemberId(this.memberId);
 		contractDto.setHelperId(this.helperId);
+		contractDto.setHelperName(this.helperName);
 		return contractDto;
 	}
 }

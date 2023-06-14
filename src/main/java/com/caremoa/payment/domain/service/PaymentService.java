@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.caremoa.payment.domain.dto.PaymentDto;
-import com.caremoa.payment.domain.model.Contract;
-import com.caremoa.payment.domain.model.Payment;
+import com.caremoa.payment.domain.dto.Payment8084Dto;
+import com.caremoa.payment.domain.model.Contract8084;
+import com.caremoa.payment.domain.model.Payment8084;
 import com.caremoa.payment.domain.repository.ContractRepository;
 import com.caremoa.payment.domain.repository.PaymentRepository;
 
@@ -24,24 +24,24 @@ public class PaymentService {
 	private final PaymentRepository paymentRepository;
 	private final ContractRepository contractRepository;
 
-    public List<PaymentDto> getAllPayments() {
-        List<Payment> payments = paymentRepository.findAll();
-        return payments.stream().map(Payment::toDto).collect(Collectors.toList());
+    public List<Payment8084Dto> getAllPayments() {
+        List<Payment8084> payments = paymentRepository.findAll();
+        return payments.stream().map(Payment8084::toDto).collect(Collectors.toList());
     }
 
-    public PaymentDto getPaymentById(Long id) {
-        Payment payment = paymentRepository.findById(id)
+    public Payment8084Dto getPaymentById(Long id) {
+        Payment8084 payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
         return payment.toDto();
     }
 
-    public PaymentDto createPayment(PaymentDto paymentDto) {
-        Payment savedPayment = paymentRepository.save(paymentDto.toEntity());
+    public Payment8084Dto createPayment(Payment8084Dto paymentDto) {
+        Payment8084 savedPayment = paymentRepository.save(paymentDto.toEntity());
         return savedPayment.toDto();
     }
 
-    public PaymentDto updatePayment(Long id, PaymentDto paymentDto) {
-        Payment existingPayment = paymentRepository.findById(id)
+    public Payment8084Dto updatePayment(Long id, Payment8084Dto paymentDto) {
+        Payment8084 existingPayment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
         existingPayment.setContract(paymentDto.getContract().toEntity());
         existingPayment.setPaymentType(paymentDto.getPaymentType());
@@ -51,7 +51,7 @@ public class PaymentService {
         existingPayment.setRequestAmount(paymentDto.getRequestAmount());
         existingPayment.setResponseDateTime(paymentDto.getResponseDateTime());
         existingPayment.setApproveNo(paymentDto.getApproveNo());
-        Payment updatedPayment = paymentRepository.save(existingPayment);
+        Payment8084 updatedPayment = paymentRepository.save(existingPayment);
         return updatedPayment.toDto();
     }
 
@@ -59,16 +59,16 @@ public class PaymentService {
         paymentRepository.deleteById(id);
     }
 
-    public List<PaymentDto> getPaymentsByMemberId(Long id) {
-        List<Payment> payments = new ArrayList<Payment>();
-        List<Contract> contract = contractRepository.findByMemberId(id);
-        for(Contract c : contract) {
-        	List<Payment> cPayments = c.getPayments();
-        	for(Payment p : cPayments) {
+    public List<Payment8084Dto> getPaymentsByMemberId(Long id) {
+        List<Payment8084> payments = new ArrayList<Payment8084>();
+        List<Contract8084> contract = contractRepository.findByMemberId(id);
+        for(Contract8084 c : contract) {
+        	List<Payment8084> cPayments = c.getPayments();
+        	for(Payment8084 p : cPayments) {
         		payments.add(p);
         	}
         }
-        return payments.stream().map(Payment::toDto).collect(Collectors.toList());
+        return payments.stream().map(Payment8084::toDto).collect(Collectors.toList());
                 
     }
 /*

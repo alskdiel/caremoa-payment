@@ -1,4 +1,5 @@
-database: h2 
+#database: mysql
+#database: h2 
 
 spring:
   application:
@@ -10,20 +11,26 @@ spring:
       mode: embedded # ALWAYS: 모든 데이터베이스에 sql 스크립트를 동작시킨다. / EMBDEDED: embedded 데이터베이스만 sql 스크립트를 동작시킨다. / NEVER: 모든 데이터베이스에 sql 스크립트를 동작시키지 않는다.
       #schema-locations: classpath*:db/${database}/schema.sql
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(z8QuriXff564tgILO+FM3JNZeKgEB4emQtFT34L7tN6RdrXhmkm06Lvlx6RryNZaSzM/udtNpgnwv6tPhuwyzy77MVGLvsmy+sWtlYauk5U2SyTvl0THgjQCnAfn/bKwly5eVizy8QoQ6koCXmLqNKIx9kCddjSv)
+    username: ENC(eRkjbBUClEuxSMQumlK4KA==)
+    password: ENC(ezUNj3HiHzPghwZjRM9Fzg==)
+    #url: jdbc:h2:mem:testdb
+    #username: sa
+    #password:
+    #driver-class-name: org.h2.Driver
   jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+  #h2:
+  #  console:
+  #    enabled: true
+  #    path: /h2-console
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
@@ -41,7 +48,7 @@ spring:
         #  brokers: localhost:9091,localhost:9092,localhost:9093
         #  zkNodes: localhost:2181,localhost:2182,localhost:2183
         binder:
-          brokers: localhost:9092
+          brokers: 13.125.214.14:9092
 
       bindings:
         #basicConsumer-in-0:
@@ -63,8 +70,10 @@ feign:
         connectTimeout: 5000
         readTimeout: 5000
         loggerLevel: basic
-        
-  
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor        
+ 
 logging:
   level:
     root: debug

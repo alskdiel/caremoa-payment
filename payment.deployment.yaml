@@ -16,6 +16,6 @@ spec:
         spec:
             containers:
             - name: payment
-              image: hyeonjaecho/payment:v1.1
+              image: hyeonjaecho/payment
               ports:
               - containerPort: 8084

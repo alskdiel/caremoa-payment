@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.caremoa.payment.domain.dto.Payment8084Dto;
 
-@FeignClient(name = "external", url = "http://13.125.214.14:8099/") // Feign Client 설정
+@FeignClient(name = "external", url = "http://ec2-3-39-223-154.ap-northeast-2.compute.amazonaws.com:8099/") // Feign Client 설정
 public interface ExternalFeignClient {
 
     @PostMapping("/external/approve-payment")

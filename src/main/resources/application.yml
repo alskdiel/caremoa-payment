@@ -41,85 +41,6 @@ spring:
   application:
     name: payment
   profiles:
-    active: docker
-  sql:
-    init:
-      mode: embedded # ALWAYS: 모든 데이터베이스에 sql 스크립트를 동작시킨다. / EMBDEDED: embedded 데이터베이스만 sql 스크립트를 동작시킨다. / NEVER: 모든 데이터베이스에 sql 스크립트를 동작시키지 않는다.
-      #schema-locations: classpath*:db/${database}/schema.sql
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://ec2-3-39-223-154.ap-northeast-2.compute.amazonaws.com:3306/user4?serverTimezone=Asia/Seoul
-    username: ENC(eRkjbBUClEuxSMQumlK4KA==)
-    password: ENC(ezUNj3HiHzPghwZjRM9Fzg==)
-    #url: jdbc:h2:mem:testdb
-    #username: sa
-    #password:
-    #driver-class-name: org.h2.Driver
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        format_sql: true
-  #h2:
-  #  console:
-  #    enabled: true
-  #    path: /h2-console
-  mvc:
-    pathmatch:
-      matching-strategy: ant-path-matcher
-#-------------------------------------------------------------
-# Kafka 설정
-#-------------------------------------------------------------
-  cloud:
-    function:
-      #definition: whenevereReviewMemberEvaluatedThenSaveContract;
-      definition: basicConsumer
-      
-    stream:
-      kafka:
-        #binder:
-        #  brokers: localhost:9091,localhost:9092,localhost:9093
-        #  zkNodes: localhost:2181,localhost:2182,localhost:2183
-        binder:
-          brokers: ec2-3-39-223-154.ap-northeast-2.compute.amazonaws.com:9092
-
-      bindings:
-        #basicConsumer-in-0:
-        #  group: contract
-        #  destination: caremoa-topic
-        #  content-type: application/json    
-        basicProducer-out-0:
-          destination: caremoa-topic
-          content-type: application/json
-
-server:
-  port: 8084
-  servlet:
-    contextPath: /payment
-
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: basic
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor        
- 
-logging:
-  level:
-    root: debug
-    org.hibernate.SQL: debug
----
-spring:
-  application:
-    name: payment
-  profiles:
     active: default
   sql:
     init:
@@ -174,7 +95,6 @@ spring:
           destination: caremoa-topic
           content-type: application/json
 
-
 server:
   port: 8080
   servlet:
@@ -193,5 +113,5 @@ jasypt:
  
 logging:
   level:
-    root: debug
-    org.hibernate.SQL: debug
+    root: error
+    org.hibernate.SQL: error

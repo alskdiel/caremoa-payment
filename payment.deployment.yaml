@@ -16,7 +16,7 @@ spec:
         spec:
             containers:
             - name: payment
-              image: 712351274497.dkr.ecr.ap-northeast-2.amazonaws.com/payment
+              image: 712351274497.dkr.ecr.ap-northeast-2.amazonaws.com/payment:latest
               ports:
               - containerPort: 8084
               resources:

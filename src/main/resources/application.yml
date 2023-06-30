@@ -113,5 +113,5 @@ jasypt:
  
 logging:
   level:
-    root: error
-    org.hibernate.SQL: error
+    root: info
+    org.hibernate.SQL: debug
